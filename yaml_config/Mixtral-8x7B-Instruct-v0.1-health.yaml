@@ -1,0 +1,43 @@
+model_type: llm
+base_model: mistralai/Mixtral-8x7B-Instruct-v0.1
+
+quantization:
+  bits: 4
+
+adapter:
+  type: lora
+
+prompt:
+  template: >-
+    ### Instruction: {instruction}
+
+    ### Response:
+
+input_features:
+  - name: prompt
+    type: text
+    preprocessing:
+      max_sequence_length: 256
+
+output_features:
+  - name: output
+    type: text
+    preprocessing:
+      max_sequence_length: 256
+
+trainer:
+  type: finetune
+  learning_rate: 0.0001
+  batch_size: 1
+  gradient_accumulation_steps: 16
+  epochs: 1
+  learning_rate_scheduler:
+    warmup_fraction: 0.01
+
+preprocessing:
+  split:
+    type: random
+    probabilities:
+    - 0.70
+    - 0.20
+    - 0.10
